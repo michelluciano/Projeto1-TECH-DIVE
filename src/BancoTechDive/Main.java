@@ -1,12 +1,15 @@
 package BancoTechDive;
 
+import java.text.Format;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 
 public class Main {
     //variaveis do sistema
-    private static ArrayList<Conta> contas = new ArrayList<>();
+    private static ArrayList<Conta> contas = new ArrayList<>();// BANCO DE DADOS
     Scanner input = new Scanner(System.in);
     int opcao = 0;
     int agencia = 0;
@@ -34,7 +37,7 @@ public class Main {
             System.out.println("3 - Relatório do sistema");
             System.out.println("00 - Sair do Sistema");
             System.out.println("=========================================");
-            opcao = Integer.parseInt(input.nextLine());
+            opcao = input.nextInt();
             //input.nextLine(); // corrigido o bug de pular entrada
             switch (opcao) {
                 case 1:
@@ -52,10 +55,12 @@ public class Main {
                     break;
             }//fim switch
         }// fim while
+
     }// fim menu inicial
 
     // MENU GERENCIAR CONTAS
     public void menuGerenciarContas() {
+        opcao =0;
         do {
             System.out.println("=========================================");
             System.out.println("         B A N C O   T E C H D I V E     ");
@@ -101,7 +106,7 @@ public class Main {
                             auxConta = contas.get(i);
                             System.out.println("------------------------------------");
                             System.out.println(" - Id:             \t" + auxConta.getNrConta());
-                            System.out.println(" - Ag:             \t" + auxConta.getAgenciaConta());
+                            System.out.println(" - Ag:             \t" + ((auxConta.getAgenciaConta()== 1) ? "001 - Florianópolis":"002 - São Jose"));
                             System.out.println(" - Nome:           \t" + auxConta.getNomeConta());
                             System.out.println(" - CPF:            \t" + auxConta.getCpfConta());
                             System.out.println(" - Reanda Mensal:  \t" + auxConta.getRendaMensalConta());
@@ -120,7 +125,7 @@ public class Main {
                     } else {
                         System.out.println("------------------------------------");
                         System.out.println(" - Id:             \t" + auxConta.getNrConta());
-                        System.out.println(" - Ag:             \t" + auxConta.getAgenciaConta());
+                        System.out.println(" - Ag:             \t" + ((auxConta.getAgenciaConta()== 1) ? "001 - Florianópolis":"002 - São Jose"));
                         System.out.println(" - Nome:           \t" + auxConta.getNomeConta());
                         System.out.println(" - CPF:            \t" + auxConta.getCpfConta());
                         System.out.println(" - Reanda Mensal:  \t" + auxConta.getRendaMensalConta());
@@ -138,7 +143,7 @@ public class Main {
                     } else {
                         System.out.println("------------------------------------");
                         System.out.println(" - Id:             \t" + auxConta.getNrConta());
-                        System.out.println(" - Ag:             \t" + auxConta.getAgenciaConta());
+                        System.out.println(" - Ag:             \t" + ((auxConta.getAgenciaConta()== 1) ? "001 - Florianópolis":"002 - São Jose"));
                         System.out.println(" - Nome:           \t" + auxConta.getNomeConta());
                         System.out.println(" - CPF:            \t" + auxConta.getCpfConta());
                         contas.remove(auxConta);
@@ -155,7 +160,7 @@ public class Main {
                     } else {
                         System.out.println("------Dados Atuais-----------");
                         System.out.println(" - Id:             \t" + auxConta.getNrConta());
-                        System.out.println(" - Ag:             \t" + auxConta.getAgenciaConta());
+                        System.out.println(" - Ag:             \t" + ((auxConta.getAgenciaConta()== 1) ? "001 - Florianópolis":"002 - São Jose"));
                         System.out.println(" - Nome:           \t" + auxConta.getNomeConta());
                         System.out.println(" - CPF:            \t" + auxConta.getCpfConta());
                         System.out.println("-----------------------------");
@@ -177,12 +182,17 @@ public class Main {
 
     // MENU ROTINAS DA CONTA
     public int menuRotinaConta() {
+        opcao =0;
         Conta conta = null;
         TransacaoBancaria transacao =null;
+
         while (conta == null) {
+            System.out.println(contas);
             System.out.println("Digite o nome ou numero da conta do cliente:");
+            input.nextLine();
             auxPesquisa = input.nextLine();
             conta = pesquisarConta(auxPesquisa);
+            System.out.println("Conta selecionada:"+conta);// criado para debug
             if (conta == null) {
                 System.out.println("Conta não encontrada!\n\n1.Para pesquisar.\n2.Voltar menu anterior");
                 opcao = input.nextInt();
@@ -201,7 +211,7 @@ public class Main {
             System.out.println("1 - Abrir/Alterar conta");
             System.out.println("2 - Realizar Saque");
             System.out.println("3 - Realizar Depósito");
-            System.out.println("4 - Verificar Saldo");
+            System.out.println("4 - Visualizar o Saldo");
             System.out.println("5 - Retirar Extrato da Conta");
             System.out.println("6 - Transferir Valores");
             System.out.println("00 - Voltar");
@@ -211,12 +221,14 @@ public class Main {
             switch (opcao) {
                 case 1:
                     break;
-                case 2:
-                    System.out.println("Digite o numero da conta:");
+                case 2: // SAQUE
+                    System.out.println("Digite o numero da conta para realizar o saque:");
                     nrConta = input.nextInt();
                     System.out.println("Digite o valor do saque: R$");
                     valorTransacao = input.nextDouble();
                     conta = pesquisarNrConta(nrConta);
+                    System.out.println(contas);
+                    System.out.println("Conta selecionada:"+conta);
                     if (conta == null) {
                         System.out.println("Conta não existe, SAQUE cancelado!");
                     }else{
@@ -232,7 +244,7 @@ public class Main {
                         }
                     }
                     break;
-                case 3:
+                case 3: // DEPOSITO
                     System.out.println("Digite o numero da conta:");
                     nrConta = input.nextInt();
                     System.out.println("Digite o valor do depósito: R$");
@@ -241,23 +253,143 @@ public class Main {
                     if (conta == null) {
                         System.out.println("Conta não existe, DEPÓSITO cancelado!");
                     }else{
-                        conta.depositor(valorTransacao);
+                        conta.depositar(valorTransacao);
                         TransacaoBancaria.serialTransacao++;
                         transacao = new TransacaoBancaria(conta,TransacaoBancaria.serialTransacao, new Date(),"DEPÓSITO",valorTransacao,'D');
                         conta.getTransacoes().add(transacao);
                         System.out.println("Deposito no valor de \nR$"+valorTransacao+" \nRealizado com SUCESSO!");
                     }
                     break;
+
+                case 4: //saldo
+                    System.out.println("Digite o numero da conta:");
+                    nrConta = input.nextInt();
+                    conta = pesquisarNrConta(nrConta);
+                    if (conta == null) {
+                        System.out.println("Conta não existe, DEPÓSITO cancelado!");
+                    }else {
+                        conta.saldo(conta, nrConta);
+                    }
+                    break;
+                case 5: // extrato
+                    System.out.println("Digite o numero da conta:");
+                    nrConta = input.nextInt();
+                    conta = pesquisarNrConta(nrConta);
+                    if (conta == null) {
+                        System.out.println("Conta não existe, DEPÓSITO cancelado!");
+                    }else{
+                        conta.extrato(conta, nrConta);
+                    }
+                    break;
+                case 6: // trasnferencia
+                    System.out.println("Digite o numero da conta Origem:");
+                    int nrContaOrigem = input.nextInt();
+                    System.out.println("Digite o numero da conta Destino:");
+                    int nrContaDestino = input.nextInt();
+                    System.out.println("Digite o valor da transferência:");
+                    valorTransacao = input.nextInt();
+
+                    conta = pesquisarNrConta(nrContaOrigem);
+                    Conta contaDestino = pesquisarNrConta(nrContaDestino);
+
+                    if (conta == null){
+                        System.out.println("Conta de ORIGEM não existe, DEPÓSITO cancelado!");
+                    }else if(contaDestino == null){
+                        System.out.println("Conta de DESTINO não existe, DEPÓSITO cancelado!");
+                    }else if(contaDestino.getNrConta() == conta.getNrConta()){
+                        System.out.println("Não é possivel realizar uma trasnferencia para a mesma coisa!\nDEPÓSITO cancelado");
+                    }else{
+                        if(valorTransacao >(conta.getSaldoConta()+conta.getLimiteConta())){
+                            System.out.println("Saldo insuficiente para realizar esta transferencia!");
+                        }else{
+                            //conta.trasnferencia(Conta conta, Conta contaDestino, valorTransacao);
+                            conta.setSaldoConta(conta.getSaldoConta() - valorTransacao);
+                            contaDestino.setSaldoConta(contaDestino.getSaldoConta() + valorTransacao);
+                            TransacaoBancaria.serialTransacao++;
+                            transacao = new TransacaoBancaria(conta,TransacaoBancaria.serialTransacao, new Date(),"TRANSFERÊNCIA",valorTransacao,'T');
+                            conta.getTransacoes().add(transacao);
+                            System.out.println("Trasnferencia no valor de \nR$"+valorTransacao+" \nRealizado com SUCESSO!");
+                        }
+                    }
+                    break;
+                case 00:
+                    return 1;
             }
         }
     }//MENU RELATORIOS DO SISTEMA
 
-    public void menuRelatorios() {
-
+    public int menuRelatorios() {
+        while (true) {
+            System.out.println("=========================================");
+            System.out.println("         R E L A T Ó R I O S             ");
+            System.out.println("=========================================");
+            System.out.println("Escolha uma opção abaixo:");
+            System.out.println("1 - Listar todas as contas");
+            System.out.println("2 - Contas com saldo negativo");
+            System.out.println("3 - Total do valor investido");
+            System.out.println("4 - Todas as transações de um determinado cliente.");
+            System.out.println("00 - Sair do Sistema");
+            System.out.println("=========================================");
+            opcao = input.nextInt();
+            //input.nextLine(); // corrigido o bug de pular entrada
+            switch (opcao) {
+                case 1:
+                    System.out.println("-------LISTA DE CLIENTES-------");
+                    if (contas.isEmpty()) {
+                        System.out.println("Não existem clientes cadastrados.");
+                    } else {
+                        for (int i = 0; i < contas.size(); i++) {
+                            auxConta = contas.get(i);
+                            System.out.println("------------------------------------");
+                            System.out.println(" - Id:             \t" + auxConta.getNrConta());
+                            System.out.println(" - Ag:             \t" + ((auxConta.getAgenciaConta()== 1) ? "001 - Florianópolis":"002 - São Jose"));
+                            System.out.println(" - Nome:           \t" + auxConta.getNomeConta());
+                            System.out.println(" - CPF:            \t" + auxConta.getCpfConta());
+                            System.out.println(" - Reanda Mensal:  \t" + auxConta.getRendaMensalConta());
+                            System.out.println(" - Limite:         \t" + auxConta.getLimiteConta());
+                            System.out.println(" - Saldo da Conta: \t" + auxConta.getSaldoConta());
+                        }
+                    }
+                    System.out.println("--------------------------------");
+                    break;
+                case 2:
+                    for (int i = 0; i < contas.size(); i++) {
+                        // pesquisa pelo nrConta
+                        if (contas.get(i).getSaldoConta() < 0){
+                            System.out.println("++++++++++++++++ Dados da Conta ++++++++++++++++++++++++++++");
+                            System.out.println(" - Nome Cliente      \t\t\t    " + contas.get(i).getNomeConta());
+                            System.out.println(" - Número da CPF     \t\t\t    " + contas.get(i).getCpfConta());
+                            System.out.println(" - Número da conta   \t\t\t    " + contas.get(i).getNrConta());
+                            System.out.println(" - Agência           \t\t\t    " + ((contas.get(i).getAgenciaConta()== 1) ? "001 - Florianópolis":"002 - São Jose"));
+                            System.out.println(" - Saldo             \t\t\t R$ " + contas.get(i).getSaldoConta());
+                            System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                        }
+                    }
+                    menuRotinaConta();
+                    break;
+                case 3:
+                    menuRelatorios();
+                    break;
+                case 4:
+                    Conta conta = null;
+                    System.out.println("Digite o NOME ou NÚMERO DA CONTA do cliente:");
+                    input.nextLine();
+                    auxPesquisa = input.nextLine();
+                    conta = pesquisarConta(auxPesquisa);
+                    conta.extrato(conta, nrConta);
+                    break;
+                case 00:
+                    return 1;
+            }//fim switch
+        }// fim while
     }
 
 
     // METODOS AUXILIARES PARA NÂO REPETIR CODIGO
+    public void extrato(int nrConta){
+
+    }
+
     public Conta pesquisarConta(String pesquisaConta) {
         Conta c = null;
         // verifica se a conta existe
@@ -278,8 +410,8 @@ public class Main {
         Conta c = null;
         // verifica se a conta existe
         for (int i = 0; i < contas.size(); i++) {
-            // pesquisa pelo id
-            if (Integer.toString(contas.get(i).getNrConta()).equals(nrConta)) {
+            // pesquisa pelo nrConta
+            if (contas.get(i).getNrConta() == nrConta) {
                 return contas.get(i);
             }
         }

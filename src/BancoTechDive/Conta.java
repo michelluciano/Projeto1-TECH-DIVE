@@ -1,5 +1,8 @@
 package BancoTechDive;
 
+import java.text.Format;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class Conta {
@@ -11,6 +14,7 @@ public class Conta {
     private int agenciaConta;
     private double saldoConta;
     public static int serialConta =0;
+    private double limiteConta;
 
     //Construtores
     public Conta() {
@@ -27,6 +31,14 @@ public class Conta {
 
     //getter e setter
 
+
+    public double getLimiteConta() {
+        return limiteConta;
+    }
+
+    public void setLimiteConta(double limiteConta) {
+        this.limiteConta = limiteConta;
+    }
 
     public ArrayList<TransacaoBancaria> getTransacoes() {
         return transacoes;
@@ -94,7 +106,7 @@ public class Conta {
                 ", nrConta=" + nrConta +
                 ", agenciaConta=" + agenciaConta +
                 ", saldoConta=" + saldoConta +
-                '}';
+                "}\n";
     }
 
     //metodos
@@ -102,7 +114,55 @@ public class Conta {
         saldoConta = saldoConta - valor;
     }
 
-    public void depositor(double valor){
+    public void depositar(double valor){
         this.saldoConta = this.saldoConta + valor;
     }
+
+    public void saldo(Conta conta,int numConta){
+        System.out.println("");
+        System.out.println("++++++++++++++++ Saldo da Conta Bancária+++++++++++++++++++");
+        System.out.println(" - Saldo                   \t R$ " + conta.getSaldoConta());
+        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        System.out.println("");
+    }
+
+    public void extrato(Conta conta, int numConta){
+        NumberFormat nf = NumberFormat.getCurrencyInstance(); // para formatar a moeda
+        Format formato = new SimpleDateFormat("dd/MM/yyyy");
+        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        System.out.println("++++++++++++++++ Extrato Conta ++++++++++++++++++++++++++++");
+        System.out.println(" - Nome Cliente      \t\t\t    " + conta.getNomeConta());
+        System.out.println(" - Número da CPF     \t\t\t    " + conta.getCpfConta());
+        System.out.println(" - Número da conta   \t\t\t    " + conta.getNrConta());
+        System.out.println(" - Agência           \t\t\t    " + ((conta.getAgenciaConta()== 1) ? "001 - Florianópolis":"002 - São Jose"));
+        System.out.println(" - Saldo             \t\t\t R$ " + conta.getSaldoConta());
+        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        System.out.println("DATA         HISTÓRICO         DOC    VALOR                 ");
+        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        for(int i = 0; i < conta.getTransacoes().size(); i++){
+            TransacaoBancaria tb = conta.getTransacoes().get(i); // representa a transação da iteração atual
+
+            String valorFormatado = nf.format(tb.getValorT());
+            System.out.println(
+                    formato.format(tb.getDataT()) + "  "
+                  + String.format("%-20s", tb.getHistoricoT()) +
+                    String.format("%1$5s", tb.getIdT()).replace(' ', '0') +
+                    String.format("%10s", valorFormatado.replace("R$ ", "")) + tb.getLetraT());
+        }
+
+        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        String valorFormatado = nf.format(conta.getSaldoConta());
+        System.out.println("SALDO ATUAL:" + String.format("%36s", valorFormatado.replace("R$ ", "")));
+        valorFormatado = nf.format(conta.getLimiteConta());
+        System.out.println("LIMITE:" + String.format("%41s", valorFormatado.replace("R$ ", "")));
+        valorFormatado = nf.format(conta.getSaldoConta() + conta.getLimiteConta());
+        System.out.println("SALDO + LIMITE:" + String.format("%33s", valorFormatado.replace("R$ ", "")));
+        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+    }
+
+    public void trasnferencia(Conta conta, Conta contaDestino, double valorTrasnferencia){
+
+    }
+
 }
