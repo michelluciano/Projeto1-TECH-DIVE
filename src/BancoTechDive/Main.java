@@ -1,6 +1,7 @@
 package BancoTechDive;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 
 public class Main {
@@ -9,6 +10,10 @@ public class Main {
     Scanner input = new Scanner(System.in);
     int opcao = 0;
     int agencia = 0;
+    int nrConta = 0;
+    String nome;
+    double rendaMensal;
+    double valorTransacao;
     Conta auxConta = null;
     String auxPesquisa;
 
@@ -36,10 +41,10 @@ public class Main {
                     menuGerenciarContas();
                     break;
                 case 2:
-                    nemuRotinaConta();
+                    menuRotinaConta();
                     break;
                 case 3:
-                    nemuRelatorios();
+                    menuRelatorios();
                     break;
                 case 00:
                     System.out.println("Saindo do Sistema B A N C O   T E C H D I V E");
@@ -171,55 +176,113 @@ public class Main {
     }// FIM menuGerenciarContas
 
     // MENU ROTINAS DA CONTA
-    public void nemuRotinaConta() {
+    public int menuRotinaConta() {
         Conta conta = null;
+        TransacaoBancaria transacao =null;
         while (conta == null) {
             System.out.println("Digite o nome ou numero da conta do cliente:");
             auxPesquisa = input.nextLine();
             conta = pesquisarConta(auxPesquisa);
-        }
+            if (conta == null) {
+                System.out.println("Conta não encontrada!\n\n1.Para pesquisar.\n2.Voltar menu anterior");
+                opcao = input.nextInt();
+                if (opcao == 2) {
+                    return 1;
+                }
+            }//fim if
+        }//fin while
 
         while (true) {
             System.out.println("=========================================");
             System.out.println("         B A N C O   T E C H D I V E     ");
             System.out.println("=========================================");
-            System.out.println("Escolha uma opção abaixo:");
+            System.out.println("Conta selecionada: " + conta.getNrConta());
+            System.out.println("Escolha uma opção abaixo " + conta.getNomeConta() + ":");
             System.out.println("1 - Abrir/Alterar conta");
-            System.out.println("2 - Sacar");
-            System.out.println("3 - Depositar");
-            System.out.println("4 - Saldo");
-            System.out.println("5 - Extrato");
-            System.out.println("6 - Transferir");
-            System.out.println("7 - Relatórios");
-            System.out.println("8 - Sair");
+            System.out.println("2 - Realizar Saque");
+            System.out.println("3 - Realizar Depósito");
+            System.out.println("4 - Verificar Saldo");
+            System.out.println("5 - Retirar Extrato da Conta");
+            System.out.println("6 - Transferir Valores");
+            System.out.println("00 - Voltar");
             System.out.println("=========================================");
             opcao = input.nextInt();
 
             switch (opcao) {
                 case 1:
+                    break;
+                case 2:
+                    System.out.println("Digite o numero da conta:");
+                    nrConta = input.nextInt();
+                    System.out.println("Digite o valor do saque: R$");
+                    valorTransacao = input.nextDouble();
+                    conta = pesquisarNrConta(nrConta);
+                    if (conta == null) {
+                        System.out.println("Conta não existe, SAQUE cancelado!");
+                    }else{
+                        if(valorTransacao > conta.getSaldoConta()){
+                            System.out.println("Saldo insuficiente");
+                            System.out.println("Saldo atual:R$"+conta.getSaldoConta());
+                        }else {
+                            conta.sacar(valorTransacao);
+                            TransacaoBancaria.serialTransacao++;
+                            transacao = new TransacaoBancaria(conta,TransacaoBancaria.serialTransacao, new Date(),"SAQUE",valorTransacao,'D');
+                            conta.getTransacoes().add(transacao);
+                            System.out.println("Saque no valor de \nR$"+valorTransacao+"\nRealizado com SUCESSO!");
+                        }
+                    }
+                    break;
+                case 3:
+                    System.out.println("Digite o numero da conta:");
+                    nrConta = input.nextInt();
+                    System.out.println("Digite o valor do depósito: R$");
+                    valorTransacao = input.nextDouble();
+                    conta = pesquisarNrConta(nrConta);
+                    if (conta == null) {
+                        System.out.println("Conta não existe, DEPÓSITO cancelado!");
+                    }else{
+                        conta.depositor(valorTransacao);
+                        TransacaoBancaria.serialTransacao++;
+                        transacao = new TransacaoBancaria(conta,TransacaoBancaria.serialTransacao, new Date(),"DEPÓSITO",valorTransacao,'D');
+                        conta.getTransacoes().add(transacao);
+                        System.out.println("Deposito no valor de \nR$"+valorTransacao+" \nRealizado com SUCESSO!");
+                    }
+                    break;
             }
         }
     }//MENU RELATORIOS DO SISTEMA
-    public void nemuRelatorios(){
 
-    };
+    public void menuRelatorios() {
+
+    }
 
 
     // METODOS AUXILIARES PARA NÂO REPETIR CODIGO
-    public Conta pesquisarConta(String pesquisaConta){
+    public Conta pesquisarConta(String pesquisaConta) {
         Conta c = null;
         // verifica se a conta existe
-        for(int i = 0; i < contas.size(); i++){
+        for (int i = 0; i < contas.size(); i++) {
             // pesquisa pelo id
-            if(Integer.toString(contas.get(i).getNrConta()).equals(pesquisaConta)){
+            if (Integer.toString(contas.get(i).getNrConta()).equals(pesquisaConta)) {
                 return contas.get(i);
             }
             // pesquisar por nome
-            else if(contas.get(i).getNomeConta().contains(pesquisaConta)){
+            else if (contas.get(i).getNomeConta().contains(pesquisaConta)) {
                 return contas.get(i);
             }
         }
         return c;
     }
 
-}
+    private Conta pesquisarNrConta(int nrConta) {
+        Conta c = null;
+        // verifica se a conta existe
+        for (int i = 0; i < contas.size(); i++) {
+            // pesquisa pelo id
+            if (Integer.toString(contas.get(i).getNrConta()).equals(nrConta)) {
+                return contas.get(i);
+            }
+        }
+        return c;
+    }
+}// FIM MAIN

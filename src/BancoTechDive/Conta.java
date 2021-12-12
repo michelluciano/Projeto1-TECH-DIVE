@@ -1,7 +1,9 @@
 package BancoTechDive;
 
-public class Conta {
+import java.util.ArrayList;
 
+public class Conta {
+    private ArrayList<TransacaoBancaria> transacoes = new ArrayList<>();
     private String nomeConta;
     private String cpfConta;
     private double rendaMensalConta;
@@ -24,6 +26,15 @@ public class Conta {
     }
 
     //getter e setter
+
+
+    public ArrayList<TransacaoBancaria> getTransacoes() {
+        return transacoes;
+    }
+
+    public void setTransacoes(ArrayList<TransacaoBancaria> transacoes) {
+        this.transacoes = transacoes;
+    }
 
     public String getNomeConta() {
         return nomeConta;
@@ -87,4 +98,11 @@ public class Conta {
     }
 
     //metodos
+    public void sacar(double valor){
+        saldoConta = saldoConta - valor;
+    }
+
+    public void depositor(double valor){
+        this.saldoConta = this.saldoConta + valor;
+    }
 }
