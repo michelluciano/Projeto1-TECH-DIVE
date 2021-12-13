@@ -268,7 +268,7 @@ public class Main {
             System.out.println("=========================================");
             System.out.println("Conta selecionada: " + conta.getNrConta());
             System.out.println("Escolha uma opção abaixo " + conta.getNomeConta() + ":");
-            System.out.println("1 - Abrir/Alterar conta");
+            System.out.println("=========================================");
             System.out.println("2 - Realizar Saque");
             System.out.println("3 - Realizar Depósito");
             System.out.println("4 - Visualizar o Saldo");
@@ -416,6 +416,13 @@ public class Main {
                             System.out.println(" - Reanda Mensal:  \t" + auxConta.getRendaMensalConta());
                             System.out.println(" - Limite:         \t" + auxConta.getLimiteConta());
                             System.out.println(" - Saldo da Conta: \t" + auxConta.getSaldoConta());
+                            if (auxConta instanceof ContaCorrente){
+                                System.out.println(" - Tipo da Conta: \t Conta Corrente");
+                            }else if(auxConta instanceof ContaPoupanca){
+                                System.out.println(" - Tipo da Conta: \t Conta Poupança");
+                            }else {
+                                System.out.println(" - Tipo da Conta: \t Conta Investimento");
+                            }
                         }
                     }
                     System.out.println("--------------------------------");
@@ -454,7 +461,7 @@ public class Main {
                         System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
                         System.out.println("++++++++++++++++ HISTÓRICO TRASNSAÇÃO ++++++++++++++++++++++++++++");
                         System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-                        System.out.println("DATA         HISTÓRICO       Conta Ori   Conta Des    VALOR                 ");
+                        System.out.println("DATA         HISTÓRICO       Conta Ori | Conta Des        VALOR     ");
                         System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
                         // verifica se a conta existe
                         for (int i = 0; i < contas.size(); i++) {
@@ -469,8 +476,9 @@ public class Main {
                                 System.out.println(
                                     formato.format(tb.getDataT()) + "  "
                                             + String.format("%-20s", tb.getHistoricoT()) +
-                                            String.format("%1$5s", tb.getContaT()).replace(' ', '0') +
-                                            String.format("%1$5s", tb.getContaTdestino()).replace(' ', '0') +
+                                            String.format("%1$5s", tb.getContaT().getNrConta()).replace(' ', '0') +
+                                            " | "+
+                                            String.format("%1$5s", tb.getContaTdestino().getNrConta()).replace(' ', '0') +
                                             String.format("%10s", valorFormatado.replace("R$ ", "")) + " "+tb.getLetraT());
                             }
 
