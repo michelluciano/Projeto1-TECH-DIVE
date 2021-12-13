@@ -78,23 +78,7 @@ public class Main {
 
             switch (opcao) {
                 case 1:
-                    //cadastrar contas
-                    System.out.print("\nDigite o nome do cliente: ");
-                    String nome = input.nextLine();
-                    System.out.print("Digite o CPF: ");
-                    String cpf = input.nextLine();
-                    System.out.println("Digite a renda mensal:");
-                    double rendaMensal = input.nextDouble();
-                    System.out.println("Digite a Agencia:\n001 - Florianópolis\n002 - São José");
-                    agencia = input.nextInt();
-                    System.out.println("Digite o valor do primeiro deposito:");
-                    double saldoInicial = input.nextDouble();
-                    Conta.serialConta++; //incrementar o contador de contas
-                    Conta c = new Conta(nome, cpf, rendaMensal, Conta.serialConta, agencia, saldoInicial);
-                    contas.add(c); //adiciona no ArrayList de contas
-                    // e finalmente mostramos uma mensagem de sucesso.
-                    System.out.println("\nA pessoa foi criada com sucesso");
-                    System.out.println(contas);
+                    menuCriarContas();
                     break;
                 case 2:
                     // listar
@@ -180,6 +164,82 @@ public class Main {
         } while (opcao != 00);
     }// FIM menuGerenciarContas
 
+    // MENU GERENCIAR CONTAS
+    public int menuCriarContas() {
+        opcao =0;
+        System.out.println("=========================================");
+        System.out.println("         B A N C O   T E C H D I V E     ");
+        System.out.println("=========================================");
+        System.out.println("Escolha uma opção abaixo:");
+        System.out.println("1 - Cadastrar Contas Corrente");
+        System.out.println("2 - Cadastrar Conta Poupança");
+        System.out.println("3 - Cadastrar Conta Investimento");
+        System.out.println("00 - Voltar");
+        System.out.println("=========================================");
+        opcao = input.nextInt();
+        input.nextLine();
+
+        switch (opcao) {
+            case 1://cadastrar contas
+                System.out.print("\nDigite o nome do cliente: ");
+                String nome = input.nextLine();
+                System.out.print("Digite o CPF: ");
+                String cpf = input.nextLine();
+                System.out.println("Digite a renda mensal:");
+                double rendaMensal = input.nextDouble();
+                System.out.println("Digite a Agencia:\n001 - Florianópolis\n002 - São José");
+                agencia = input.nextInt();
+                System.out.println("Digite o valor do primeiro deposito:");
+                double saldoInicial = input.nextDouble();
+                ContaCorrente.serialConta++; //incrementar o contador de contas
+                ContaCorrente cc = new ContaCorrente(nome, cpf, rendaMensal, Conta.serialConta, agencia, saldoInicial);
+                contas.add(cc); //adiciona no ArrayList de contas
+                // e finalmente mostramos uma mensagem de sucesso.
+                System.out.println("\nA Conta Corrente foi criada com sucesso");
+                System.out.println(contas);
+                break;
+            case 2:
+                System.out.print("\nDigite o nome do cliente: ");
+                nome = input.nextLine();
+                System.out.print("Digite o CPF: ");
+                cpf = input.nextLine();
+                System.out.println("Digite a renda mensal:");
+                rendaMensal = input.nextDouble();
+                System.out.println("Digite a Agencia:\n001 - Florianópolis\n002 - São José");
+                agencia = input.nextInt();
+                System.out.println("Digite o valor do primeiro deposito:");
+                saldoInicial = input.nextDouble();
+                ContaPoupanca.serialConta++; //incrementar o contador de contas
+                ContaPoupanca cp = new ContaPoupanca(nome, cpf, rendaMensal, Conta.serialConta, agencia, saldoInicial);
+                contas.add(cp); //adiciona no ArrayList de contas
+                // e finalmente mostramos uma mensagem de sucesso.
+                System.out.println("\nA Conta Poupança foi criada com sucesso");
+                System.out.println(contas);
+                break;
+            case 3:
+                System.out.print("\nDigite o nome do cliente: ");
+                nome = input.nextLine();
+                System.out.print("Digite o CPF: ");
+                cpf = input.nextLine();
+                System.out.println("Digite a renda mensal:");
+                rendaMensal = input.nextDouble();
+                System.out.println("Digite a Agencia:\n001 - Florianópolis\n002 - São José");
+                agencia = input.nextInt();
+                System.out.println("Digite o valor do primeiro deposito:");
+                saldoInicial = input.nextDouble();
+                ContaInvestimento.serialConta++; //incrementar o contador de contas
+                ContaInvestimento ci = new ContaInvestimento(nome, cpf, rendaMensal, Conta.serialConta, agencia, saldoInicial);
+                contas.add(ci); //adiciona no ArrayList de contas
+                // e finalmente mostramos uma mensagem de sucesso.
+                System.out.println("\nA Conta Investimento foi criada com sucesso");
+                System.out.println(contas);
+                break;
+            case 00:
+                return 1;
+        }
+        return 1;
+    }
+
     // MENU ROTINAS DA CONTA
     public int menuRotinaConta() {
         opcao =0;
@@ -232,7 +292,7 @@ public class Main {
                     if (conta == null) {
                         System.out.println("Conta não existe, SAQUE cancelado!");
                     }else{
-                        if(valorTransacao > conta.getSaldoConta()){
+                        if(valorTransacao > (conta.getSaldoConta() + conta.getLimiteConta())){
                             System.out.println("Saldo insuficiente");
                             System.out.println("Saldo atual:R$"+conta.getSaldoConta());
                         }else {
@@ -429,6 +489,18 @@ public class Main {
 
 
     // METODOS AUXILIARES PARA NÂO REPETIR CODIGO
+
+//    public int validaCpf( int cpf){
+//        while (false) {
+//            cpf = cpf.replace replaceAll("[^0-9]", "");
+//
+//            if (cpf.length()==11){
+//                cpfValido=true;
+//            }else{
+//                System.out.println("Cpf informado não é válido. Tente novamente.");
+//            }
+//        }
+//    }
 
     public Conta pesquisarConta(String pesquisaConta) {
         Conta c = null;

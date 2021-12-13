@@ -8,7 +8,7 @@ public class ContaCorrente extends Conta{
         this.valorChequeEs = valorChequeEs;
     }
 
-    public ContaCorrente(String nomeConta, String cpfConta, double rendaMensalConta, int nrConta, int agenciaConta, double saldoConta, double valorChequeEs) {
+    public ContaCorrente(String nomeConta, String cpfConta, double rendaMensalConta, int nrConta, int agenciaConta, double saldoConta) {
         super(nomeConta, cpfConta, rendaMensalConta, nrConta, agenciaConta, saldoConta);
         this.valorChequeEs = valorChequeEs;
     }
@@ -20,5 +20,13 @@ public class ContaCorrente extends Conta{
 
     public void setValorChequeEs(double valorChequeEs) {
         this.valorChequeEs = valorChequeEs;
+    }
+
+    //metodos
+    public void sacar(double valor){
+        setSaldoConta(getSaldoConta() - valor);
+        if(getSaldoConta() <=0 ){
+
+        }
     }
 }
