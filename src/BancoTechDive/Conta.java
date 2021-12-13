@@ -138,7 +138,7 @@ public class Conta {
         System.out.println(" - Agência           \t\t\t    " + ((conta.getAgenciaConta()== 1) ? "001 - Florianópolis":"002 - São Jose"));
         System.out.println(" - Saldo             \t\t\t R$ " + conta.getSaldoConta());
         System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-        System.out.println("DATA         HISTÓRICO         DOC    VALOR                 ");
+        System.out.println("DATA         HISTÓRICO         DOC       VALOR                 ");
         System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         for(int i = 0; i < conta.getTransacoes().size(); i++){
             TransacaoBancaria tb = conta.getTransacoes().get(i); // representa a transação da iteração atual
@@ -148,7 +148,7 @@ public class Conta {
                     formato.format(tb.getDataT()) + "  "
                   + String.format("%-20s", tb.getHistoricoT()) +
                     String.format("%1$5s", tb.getIdT()).replace(' ', '0') +
-                    String.format("%10s", valorFormatado.replace("R$ ", "")) + tb.getLetraT());
+                    String.format("%10s", valorFormatado.replace("R$ ", "")) + " "+tb.getLetraT());
         }
 
         System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
@@ -161,8 +161,4 @@ public class Conta {
         System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
     }
 
-    public void trasnferencia(Conta conta, Conta contaDestino, double valorTrasnferencia){
-
-    }
-
-}
+}//FECHA CONTA

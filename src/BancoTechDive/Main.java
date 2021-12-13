@@ -238,7 +238,7 @@ public class Main {
                         }else {
                             conta.sacar(valorTransacao);
                             TransacaoBancaria.serialTransacao++;
-                            transacao = new TransacaoBancaria(conta,TransacaoBancaria.serialTransacao, new Date(),"SAQUE",valorTransacao,'D');
+                            transacao = new TransacaoBancaria(conta,null,TransacaoBancaria.serialTransacao, new Date(),"SAQUE",valorTransacao,'D');
                             conta.getTransacoes().add(transacao);
                             System.out.println("Saque no valor de \nR$"+valorTransacao+"\nRealizado com SUCESSO!");
                         }
@@ -254,9 +254,13 @@ public class Main {
                         System.out.println("Conta não existe, DEPÓSITO cancelado!");
                     }else{
                         conta.depositar(valorTransacao);
+
+
                         TransacaoBancaria.serialTransacao++;
-                        transacao = new TransacaoBancaria(conta,TransacaoBancaria.serialTransacao, new Date(),"DEPÓSITO",valorTransacao,'D');
+                        transacao = new TransacaoBancaria(conta,null,TransacaoBancaria.serialTransacao, new Date(),"DEPÓSITO",valorTransacao,'C');
                         conta.getTransacoes().add(transacao);
+
+
                         System.out.println("Deposito no valor de \nR$"+valorTransacao+" \nRealizado com SUCESSO!");
                     }
                     break;
@@ -306,8 +310,11 @@ public class Main {
                             conta.setSaldoConta(conta.getSaldoConta() - valorTransacao);
                             contaDestino.setSaldoConta(contaDestino.getSaldoConta() + valorTransacao);
                             TransacaoBancaria.serialTransacao++;
-                            transacao = new TransacaoBancaria(conta,TransacaoBancaria.serialTransacao, new Date(),"TRANSFERÊNCIA",valorTransacao,'T');
+                            transacao = new TransacaoBancaria(conta,contaDestino,TransacaoBancaria.serialTransacao, new Date(),"TRANSFERÊNCIA",valorTransacao,'D');
                             conta.getTransacoes().add(transacao);
+                            transacao = new TransacaoBancaria(conta,contaDestino,TransacaoBancaria.serialTransacao, new Date(),"TRANSFERÊNCIA",valorTransacao,'C');
+                            contaDestino.getTransacoes().add(transacao);
+
                             System.out.println("Trasnferencia no valor de \nR$"+valorTransacao+" \nRealizado com SUCESSO!");
                         }
                     }
@@ -328,6 +335,7 @@ public class Main {
             System.out.println("2 - Contas com saldo negativo");
             System.out.println("3 - Total do valor investido");
             System.out.println("4 - Todas as transações de um determinado cliente.");
+            System.out.println("5 - Histórico de Transações.");
             System.out.println("00 - Sair do Sistema");
             System.out.println("=========================================");
             opcao = input.nextInt();
@@ -365,7 +373,7 @@ public class Main {
                             System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
                         }
                     }
-                    menuRotinaConta();
+
                     break;
                 case 3:
                     menuRelatorios();
@@ -378,6 +386,41 @@ public class Main {
                     conta = pesquisarConta(auxPesquisa);
                     conta.extrato(conta, nrConta);
                     break;
+                case 5:
+                    if (contas.isEmpty()){
+                        System.out.println("Não existem contas suficientes para gerar um relaótio de transações");
+                    }else{
+                        Conta c = null;
+                        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                        System.out.println("++++++++++++++++ HISTÓRICO TRASNSAÇÃO ++++++++++++++++++++++++++++");
+                        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                        System.out.println("DATA         HISTÓRICO       Conta Ori   Conta Des    VALOR                 ");
+                        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                        // verifica se a conta existe
+                        for (int i = 0; i < contas.size(); i++) {
+                            // pesquisa pelo id
+                            c = contas.get(i);
+                            NumberFormat nf = NumberFormat.getCurrencyInstance(); // para formatar a moeda
+                            Format formato = new SimpleDateFormat("dd/MM/yyyy");
+
+                            for(int j = 0; j < c.getTransacoes().size(); j++){
+                                TransacaoBancaria tb = c.getTransacoes().get(j); // representa a transação da iteração atual
+                                String valorFormatado = nf.format(tb.getValorT());
+                                System.out.println(
+                                    formato.format(tb.getDataT()) + "  "
+                                            + String.format("%-20s", tb.getHistoricoT()) +
+                                            String.format("%1$5s", tb.getContaT()).replace(' ', '0') +
+                                            String.format("%1$5s", tb.getContaTdestino()).replace(' ', '0') +
+                                            String.format("%10s", valorFormatado.replace("R$ ", "")) + " "+tb.getLetraT());
+                            }
+
+                            System.out.println("___________________________________________________________________");
+                        }
+                        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                        }
+
+
+                    break;
                 case 00:
                     return 1;
             }//fim switch
@@ -386,9 +429,6 @@ public class Main {
 
 
     // METODOS AUXILIARES PARA NÂO REPETIR CODIGO
-    public void extrato(int nrConta){
-
-    }
 
     public Conta pesquisarConta(String pesquisaConta) {
         Conta c = null;

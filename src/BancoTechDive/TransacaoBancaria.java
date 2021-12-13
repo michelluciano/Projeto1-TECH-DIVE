@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class TransacaoBancaria {
     private Conta contaT; // conta a qual esta transação pertence
+    private Conta contaTdestino; // conta a qual esta transação pertence
     private int idT; // identifica unicamente esta transação
     private Date dataT; // data da transação
     private String historicoT; // descrição da transação
@@ -14,8 +15,9 @@ public class TransacaoBancaria {
     public TransacaoBancaria() {
     }
 
-    public TransacaoBancaria(Conta contaT, int idT, Date dataT, String historicoT, double valorT, char letraT) {
+    public TransacaoBancaria(Conta contaT,Conta contaTdestino, int idT, Date dataT, String historicoT, double valorT, char letraT) {
         this.contaT = contaT;
+        this.contaTdestino = contaTdestino;
         this.idT = idT;
         this.dataT = dataT;
         this.historicoT = historicoT;
@@ -25,6 +27,14 @@ public class TransacaoBancaria {
 
     // getter e setter
 
+
+    public Conta getContaTdestino() {
+        return contaTdestino;
+    }
+
+    public void setContaTdestino(Conta contaTdestino) {
+        this.contaTdestino = contaTdestino;
+    }
 
     public Conta getContaT() {
         return contaT;
